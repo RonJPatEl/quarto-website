@@ -19,5 +19,5 @@ format:
     linestretch: 1.7
     toc: true
 
-editor: visual
+editor: source
 
