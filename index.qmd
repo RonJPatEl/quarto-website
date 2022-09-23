@@ -1,0 +1,45 @@
+---
+title: "Dr. Ron J. Pat-El"
+image: data/images/Pasfoto.jpg
+about:
+  template: jolla
+  links:
+    - icon: linkedin
+      href: https://www.linkedin.com/in/ron-pat-el-010b532a/
+    - icon: twitter
+      href: https://twitter.com/RonJPatEl
+    - icon: journal-bookmark-fill
+      href: data/2022-Pat-ElCV.docx
+    - icon: envelope-fill
+      href: mailto:ron.pat-el@ou.nl
+citation: false
+comments: 
+  utterances: 
+    repo: no
+license: ""
+---
+I am an assistant professor in Methods & Statistics at the Open Universiteit.
+My research focuses on psychometrics, agent-based models and student motivation in the context of assessment for learning and statistical education.
+
+```{=html}
+
+<style>
+.h-index {
+  background-color: white;
+  color: #0F2E3D;
+  padding: 10px 20px;
+  text-decoration: none;
+  cursor: pointer;
+  border-style: solid;
+  border-color: #0F2E3D;;
+  border-radius: 5px;
+}
+</style>
+```
+
+```{=html}
+<a target="_blank" href="https://scholar.google.com/citations?user=sAAmFv8AAAAJ&hl=en">
+  <button class="h-index">h-index: `r scholar::get_profile('sAAmFv8AAAAJ&hl')$h_index`</button>
+</a>
+
+```

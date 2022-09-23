@@ -1,0 +1,136 @@
+---
+title: "About Me"
+---
+
+Welcome to my webpage. Over the past years I have researched student motivation and how learning environments can be designed to foster it. 
+
+I love to evaluate the tools researchers use to answer their research questions. As such my work has focused on validation procedures for questionnaires as well as delving into novel ways of testing psychological theories of dynamic group processes. Check out this page to know more about my research and research experience and my education background.
+
+<h2> <i class="fa-solid fa-book"></i> Selected Publications </h2>
+
+- Verboon, P., & Pat-El, R. J. (2022). Clustering longitudinal data using R: A Monte Carlo study. Methodology: *European Journal of Research Methods for the Behavioral and Social Sciences*, *18*(2), 144–163. <https://doi.org/10.5964/meth.7143>
+- Strijbos, J.-W., Pat-El, R. J., & Narciss, S. (2021). Structural validity and invariance of the Feedback Perceptions Questionnaire. *Studies in Educational Evaluation*, *68*, 1–12. <https://doi.org/10.1016/j.stueduc.2021.100980>
+- Pat-El, R. J., Tillema, H., Segers, M., & Vedder, P. (2013). Validation of Assessment for Learning Questionnaires for teachers and students. *The British Journal of Educational Psychology*, *83*(1), 98–113. <https://doi.org/10.1111/j.2044-8279.2011.02057.x>
+- Pat-El, R. J., Tillema, H., & van Koppen, S. W. M. (2012). Effects of formative feedback on intrinsic motivation: Examining ethnic differences. *Learning and Individual Differences*, *22*(4), 449–454. <https://doi.org/10.1016/j.lindif.2012.04.001>
+
+
+```{=html}
+<!-- linking the fontawesome library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+```
+
+```{=html}
+<style>
+.pill {
+  background-color: #303c54;
+  border: none;
+  font-size: 70%;
+  color: white;
+  padding: 1px 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  border-radius: 16px;
+}
+
+ul.about {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+</style>
+```
+
+<h2> <i class="fa-solid fa-user-graduate"></i> Education </h2>
+
+<ul class="about">
+  <li> <span class="pill">2015 - 2016</span> </li>
+  <li> **Basiskwalificatie Onderwijs (BKO)** </li>
+  <li> Open University of the Netherlands </li>
+</ul>
+
+<ul class="about">
+  <li> <span class="pill">2006 - 2012</span> </li>
+  <li> **Ph.D. Educational Sciences** </li>
+  <li> Leiden University, Institute of Education and Child Studies </li>
+</ul>
+
+<ul class="about">
+  <li> <span class="pill">2000 - 2006</span> </li>
+  <li> **MSc. Psychology** </li>
+  <li> Leiden University, Institute of Psychology, department of Methods & Statistics and Social & Organisational Psychology </li>
+</ul>
+
+
+<h2> <i class="fa-solid fa-briefcase"></i> Experience </h2>
+
+<ul class="about">
+  <li> <span class="pill">2016 - present</span> </li>
+  <li> **Assistant Professor Methods & Statistics (UD1)** </li>
+  <li> *Open University of the Netherlands* </li>
+  <li> Awarded Best Open University Teacher of 2021. Awarded Best Faculty Teacher of 2018 and 2020. Responsible for coordinating, teaching and developing courses in the statistics curriculum and the research line statistics education </li>
+</ul>
+
+<ul class="about">
+  <li> <span class="pill">2014 - 2016</span> </li>
+  <li> **Assistant Professor Methods & Statistics (UD2)** </li>
+  <li> *Open University of the Netherlands* </li>
+  <li> Responsible for teaching and assisting in the development of the department's curriculum and researching issues in statistics education </li>
+</ul>
+
+<ul class="about">
+  <li> <span class="pill">2013 - 2014</span> </li>
+  <li> **Lecturer Child Studies and Educational Sciences** </li>
+  <li> *Leiden University* </li>
+  <li> Responsible for the development of the second year bachelor course 'learning and cognition'. Additional responsibilities included provision of instructionals and lectures. Coordinator for the bachelor-thesis program for the academic PABO (elementary school teacher-students) </li>
+</ul>
+
+<ul class="about">
+  <li> <span class="pill">2013 - 2015</span> </li>
+  <li> **Statistical consultant** </li>
+  <li> *Independent* </li>
+  <li> Statistical training and consulting. Examples of projects include training of thesis supervisors, time series analyses to forecast student admission for primary schools and dissertation support </li>
+</ul>
+
+<ul class="about">
+  <li> <span class="pill">2011 - 2014</span> </li>
+  <li> **Teaching Assistant Statistics** </li>
+  <li> *Vrije Universiteit, Amsterdam* </li>
+  <li> Teaching bachelor-level statistics, i.e., psychometrics, research designs and multivariate statistics to classes of 20 2nd year bachelor students and Structural Equation Modeling to 3rd year bachelor students of Psychology and Child studies</li>
+</ul>
+
+<ul class="about">
+  <li> <span class="pill">2012 - 2013</span> </li>
+  <li> **Thesis supervisor Educational Science** </li>
+  <li> *Leiden University* </li>
+  <li> Supervision of 20 bachelor-thesis students </li>
+</ul>
+
+<ul class="about">
+  <li> <span class="pill">2012 - 2013</span> </li>
+  <li> **Teaching Assistant Developmental Psychology** </li>
+  <li> *Vrije Universiteit, Amsterdam* </li>
+  <li> Lecturing student teachers in the academic teacher education program (academic PABO) developmental psychological theories </li>
+</ul>
+
+<ul class="about">
+  <li> <span class="pill">2011 - 2012</span> </li>
+  <li> **Teacher Educational science** </li>
+  <li> *Leiden University* </li>
+  <li> Lecturer and instructor for masters' courses in research methodology, and first-year courses in Child Studies </li>
+</ul>
+
+<ul class="about">
+  <li> <span class="pill">2006 - 2012</span> </li>
+  <li> **PhD-candidate Educational Science** </li>
+  <li> *Leiden University* </li>
+  <li> PhD-researcher at the institute of Education and Child Studies, in the department of Educational Sciences </li>
+</ul>
+
+<ul class="about">
+  <li> <span class="pill">2007 - 2008</span> </li>
+  <li> **Thesis supervisor Clinical child studies** </li>
+  <li> *Leiden University* </li>
+  <li> Supervisor of 13 master students in Clinical Child Studies. The subject of the master project was Depression as related to physical health and relational problems </li>
+</ul>
+

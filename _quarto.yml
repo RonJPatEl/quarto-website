@@ -1,0 +1,23 @@
+project:
+  type: website
+
+website:
+  title: "Ron Pat-El, PhD."
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - about.qmd
+      - publications.qmd
+
+format:
+  html:
+    theme: 
+      - flatly
+      - custom.scss
+    fontsize: 0.9em
+    linestretch: 1.7
+    toc: true
+
+editor: visual
+
