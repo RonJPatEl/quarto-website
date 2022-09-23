@@ -9,7 +9,7 @@ about:
     - icon: twitter
       href: https://twitter.com/RonJPatEl
     - icon: journal-bookmark-fill
-      href: data/2022-Pat-ElCV.docx
+      href: data/pdf/Pat-ElCV.pdf
     - icon: envelope-fill
       href: mailto:ron.pat-el@ou.nl
 citation: false
