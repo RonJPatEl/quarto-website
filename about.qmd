@@ -35,7 +35,7 @@ I love to evaluate the tools researchers use to answer their research questions.
 
 ul.about {
   list-style-type: none;
-  margin: 0;
+  margin: 0 0 1em 0;
   padding: 0;
 }
 </style>

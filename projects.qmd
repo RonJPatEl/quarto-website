@@ -1,0 +1,83 @@
+---
+title: "Projects"
+---
+
+```{=html}
+<style>
+.card {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+  margin-bottom: 1em;
+}
+
+  /* make title bold */
+.card-title {
+  font-weight: bold;
+}
+
+/* On mouse-over, add a deeper shadow */
+.card:hover {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+/* Add some padding inside the card container */
+.card-body {
+  padding: 2px 16px;
+}
+
+/* limit image size */
+.card-img-top {
+  height: 100px;
+  width: 200px;
+  image-rendering: auto;
+}
+</style>
+```
+
+```{=html}
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><a href="https://www.ou.nl/en/-/serious-game-over-de-statistische-aspecten-van-onderzoek?utm_source=twitter&utm_medium=social&utm_campaign=psychologie">Serious Game - Junior Scientist</a></h5>
+      <p class="card-text">Funding source: Kwaliteitsafspraken Open University</p>
+      <p class="card-text"><small class="text-muted">Role: Principal investigator</small></p>
+      <p>Student's usually learn methodology best in the bachelor or master thesis. Why? Because this is usually the first time they engage with statistics and methodology as a congruent whole, instead of as atomatic knowledge units. In the serious game 'junior scients' we intent to place the student in a consultancy/research-assistant role. By placing the student in the role of advisor from the start of a research project to its finish it is our aim to give life to research and the cost-benefit analysis that choices in methodology and statistics bring with them </p>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><a href="https://www.ou.nl/en/-/chatbot-wekt-historisch-figuur-tot-leven">Chatting with the past (Chatten met het verleden)</a></h5>
+      <p class="card-text">Funding source: Leiden Education Innovation (Onderwijsinnovatiesubsidie gemeente Leiden)</p>
+      <p class="card-text"><small class="text-muted">Role: Co-investigator</small></p>
+      <p>Getting students to see history from the perspective of someone living that part of history is a daunting challenge. This projects intends to help teachers and museums by simulating a conversation with someone in history. In Chatting with the Past a team from the Open University, Leiden University and the Rijkmuseum van Oudheden develop a chatbot who gives voice to Caetennia Pollita, a 10-year old Roman Girl of whom little is known other than the inscription on her tomb altar</p>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><a href="https://www.ou.nl/en/innovating-for-resilience-projects-innovating-digital-assessment">Innovating digital assessment: Effective use of multimedia</a></h5>
+      <p class="card-text">Funding source: Open University: Call for Interdisciplinary Research</p>
+      <p class="card-text"><small class="text-muted">Role: Copromotor</small></p>
+      <p>The purpose of this project is to come with concrete recommendations for multimedia use in assessments. Not all multimedia use is effective, and effectiveness is likely a function of the type and purpose of assessment. A review of existing multimedia use in assessment will be made, followed by studies intended to come to recommendations for best practice given a specific assessment context</p>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title"><a href="https://www.ou.nl/en/-/gamebrics-tijdens-de-gameplay-feedback-krijgen-over-je-vaardigheden">Gamebrics: Serious gaming voor actief online leren met geïntegreerde analytical rubrics voor formatieve e-toetsing</a></h5>
+      <p class="card-text">Funding source: SURF: Activiteitenplan Pijler Online onderwijs</p>
+      <p class="card-text"><small class="text-muted">Role: Co-investigator</small></p>
+      <p>The Gamebrics projects aims to develop a general rubric for assessing academic skills and communication growth in serious games. In two games, namely <i>Junior Scients</i> (methodology & statistics) and <i>Kastanjehoeve</i> (management sciences), variants of the same rubrics will be implemented and its efficacy evaluated.</p>
+    </div>
+  </div>
+  
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title">Designer wizard for Serious Games for computational thinking in higher education</h5>
+      <p class="card-text">Funding source: Open University: Call for Interdisciplinary Research</p>
+      <p class="card-text"><small class="text-muted">Role: Copromotor</small></p>
+      <p>In this project we aim to develop a design wizard for serious games which will function as an instructional design aid for teachers in higher eduction. The wizard should fulfill the role of an expert in guiding teachers through the design process and purpose-scoping of a serious game</p>
+    </div>
+  </div>
+```
