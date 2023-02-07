@@ -2,9 +2,12 @@
 title: "About Me"
 ---
 
-Welcome to my webpage. Over the past years I have researched student motivation and how learning environments can be designed to foster it. 
+Dr. R. J. Pat-El is an enthusiastic and dedicated Assistant Professor of Methods & Statistics at the Open University of the Netherlands. With a Ph.D. in Educational Sciences from Leiden University and a MSc. in Psychology from Leiden University, he brings a wealth of knowledge and expertise to the field. His passion for statistics education is reflected in his numerous publications, including "Clustering Longitudinal Data Using R: A Monte Carlo Study" and "Effects of Formative Feedback on Intrinsic Motivation: Examining Ethnic Differences."
 
-I love to evaluate the tools researchers use to answer their research questions. As such my work has focused on validation procedures for questionnaires as well as delving into novel ways of testing psychological theories of dynamic group processes. Check out this page to know more about my research and research experience and my education background.
+Dr. Pat-El has a passion for teaching and sharing his knowledge with others. Over the years, he has taught at several universities and has also served as a statistical consultant, providing training and consulting services to clients. His commitment to teaching excellence has been recognized through awards such as "Best Open University Teacher of 2021" and "Best Faculty Teacher of 2018 and 2020."
+
+Aside from teaching and conducting research, Dr. Pat-El is also known for his friendly and approachable demeanor. He enjoys working with students and helping them to understand complex statistical concepts in a clear and concise manner. He also takes pride in being able to connect with his students on a personal level and make statistics a fun and engaging subject.
+
 
 <h2> <i class="fa-solid fa-book"></i> Selected Publications </h2>
 
