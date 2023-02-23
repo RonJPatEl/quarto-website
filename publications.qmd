@@ -71,7 +71,7 @@ extractLevelColumns <- function(
 flattenList <- function(mainList,...) do.call(cbind,extractLevelColumns(mainList,...));
 
 
-json_file <- "https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&itemType=journalArticle || conferencePaper&sort=date&style=apa"
+json_file <- "https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&itemType=journalArticle%20||%20conferencePaper&sort=date&style=apa"
 json_data <- fromJSON(file=json_file, simplify = TRUE)
 
 df <- flattenList(json_data)
@@ -135,7 +135,7 @@ knitr::asis_output(dfpres$bib)
 
 ```{r get_books, include=FALSE}
 # load book references
-json_book <- 'https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&itemType=book || thesis || bookSection || webpage&sort=date&style=apa'
+json_book <- 'https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&itemType=book%20||%20thesis%20||%20bookSection%20||%20webpage&sort=date&style=apa'
 json_bookdata <- fromJSON(file=json_book, simplify = TRUE)
 
 # create dataframe from JSON
