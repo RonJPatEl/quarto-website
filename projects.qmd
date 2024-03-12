@@ -1,6 +1,19 @@
 ---
-title: "Projects"
+title: "Projects and Awards"
 ---
+
+# Awards
+
+| Date | Award                                                                                                                              |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| 2023 | Faculty award for excellence in Teaching 2023 (Facultair docent van het jaar 2023)                                                 |
+| 2023 | [Best educational product 2023 (Onderwijsproduct van het jaar 2023)](https://gamebrics.nl/nieuws/onderwijsproduct-2023-gamebrics/) |
+| 2021 | Open University award for excellence in teaching 2021 (Open Universiteit docent van het jaar 2021)                                 |
+| 2020 | Faculty award for excellence in Teaching 2020 (Facultair docent van het jaar 2020)                                                 |
+| 2018 | Faculty award for excellence in Teaching 2018 (Facultair docent van het jaar 2018)                                                 |
+
+
+# Projects
 
 As a researcher and academic, I am actively involved in several exciting projects aimed at enhancing education and learning through innovative technologies and methodologies. Whether it's through the development of serious games, digital assessments, or simulations, each of my projects brings a unique perspective to the field of education. I am proud to work together with my colleagues on these project, and I am eager to share their progress with the world. In this section, you will find a brief overview of each of my current projects, including the funding source and my role on the project.
 
