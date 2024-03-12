@@ -37,9 +37,14 @@ My research focuses on psychometrics, agent-based models and student motivation 
 </style>
 ```
 
+```{r echo=FALSE}
+hindex <- scholar::get_profile('sAAmFv8AAAAJ&hl')$h_index
+```
+
+
 ```{=html}
 <a target="_blank" href="https://scholar.google.com/citations?user=sAAmFv8AAAAJ&hl=en">
-  <button class="h-index">h-index: `r scholar::get_profile('sAAmFv8AAAAJ&hl')$h_index`</button>
+  <button class="h-index">h-index: `r hindex`</button>
 </a>
 
 ```
