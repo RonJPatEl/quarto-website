@@ -11,6 +11,7 @@ Aside from teaching and conducting research, Dr. Pat-El is also known for his fr
 
 <h2> <i class="fa-solid fa-book"></i> Selected Publications </h2>
 
+- Visser, L., Pat-El, R. J., Lataster, J., Van Lankveld, J., & Jacobs, N. (2024). Beyond difference scores: Unlocking insights with polynomial regression in Sstudies on the effects of implicit-explicit congruency. Psychologica Belgica, 64(1), 5–23. <https://doi.org/10.5334/pb.1246>
 - Verboon, P., & Pat-El, R. J. (2022). Clustering longitudinal data using R: A Monte Carlo study. Methodology: *European Journal of Research Methods for the Behavioral and Social Sciences*, *18*(2), 144–163. <https://doi.org/10.5964/meth.7143>
 - Strijbos, J.-W., Pat-El, R. J., & Narciss, S. (2021). Structural validity and invariance of the Feedback Perceptions Questionnaire. *Studies in Educational Evaluation*, *68*, 1–12. <https://doi.org/10.1016/j.stueduc.2021.100980>
 - Pat-El, R. J., Tillema, H., Segers, M., & Vedder, P. (2013). Validation of Assessment for Learning Questionnaires for teachers and students. *The British Journal of Educational Psychology*, *83*(1), 98–113. <https://doi.org/10.1111/j.2044-8279.2011.02057.x>
