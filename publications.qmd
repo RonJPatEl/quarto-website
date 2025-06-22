@@ -113,6 +113,9 @@ shiny::HTML(journalpub())
 ```{r get_presentations, include=FALSE}
 # load presentation references
 json_pres <- 'https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&itemType=Presentation&sort=date&style=apa'
+
+# Try adding a small delay before fetching
+Sys.sleep(3) # Wait for 1 second
 json_presdata <- fromJSON(file=json_pres, simplify = TRUE)
 
 # create dataframe from JSON
@@ -136,6 +139,9 @@ knitr::asis_output(dfpres$bib)
 ```{r get_books, include=FALSE}
 # load book references
 json_book <- 'https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&itemType=book%20||%20thesis%20||%20bookSection%20||%20webpage&sort=date&style=apa'
+
+# Try adding a small delay before fetching
+Sys.sleep(1) # Wait for 1 second
 json_bookdata <- fromJSON(file=json_book, simplify = TRUE)
 
 # create dataframe from JSON
@@ -156,9 +162,38 @@ dfbook$bib <- gsub("Pat-El, R. J.", "<b>Pat-El, R. J.</b>", dfbook$bib)
 knitr::asis_output(dfbook$bib)
 ```
 
+```{r get_software, include=FALSE}
+# load software references by tag
+json_software <- 'https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&tag=software&sort=date&style=apa'
+
+# Try adding a small delay before fetching
+Sys.sleep(1) # Wait for 1 second
+json_softwaredata <- fromJSON(file=json_software, simplify = TRUE)
+
+# create dataframe from JSON
+dfsoftware <- flattenList(json_softwaredata)
+```
+
+## Software <button class='pill'>`r dim(dfsoftware)[1]`</button>
+
+```{r software, echo=FALSE, message=FALSE, warning=FALSE}
+# fix variants of my name
+dfsoftware$bib <- gsub("Pat-El, R.,", "Pat-El, R. J.,", dfsoftware$bib)
+dfsoftware$bib <- gsub("Pat El", "Pat-El", dfsoftware$bib)
+
+# make my name bold
+dfsoftware$bib <- gsub("Pat-El, R. J.", "<b>Pat-El, R. J.</b>", dfsoftware$bib)
+
+# print my list of software in html
+knitr::asis_output(dfsoftware$bib)
+```
+
 ```{r get_professional, include=FALSE}
 # load mag references
 json_mag <- 'https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&itemType=magazineArticle&sort=date&style=apa'
+
+# Try adding a small delay before fetching
+Sys.sleep(6) # Wait for 1 second
 json_magdata <- fromJSON(file=json_mag, simplify = TRUE)
 
 # create dataframe from JSON
