@@ -1,11 +1,216 @@
 ---
 title: "Publications"
-output: 
-  toc: true
+toc: true
+freeze: auto
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+
+library(curl)
+library(jsonlite)
+library(stringr)
+library(dplyr)
+library(knitr)
+
+# ---------- UI ----------
+pill_html <- function(n) sprintf("<button class='pill'>%s</button>", n)
+
+# ---------- Robust Zotero fetch ----------
+read_zotero <- function(url, retries = 3) {
+  h <- new_handle()
+  handle_setopt(
+    h,
+    useragent = "Quarto Zotero fetch",
+    followlocation = 1L,
+    timeout = 30L
+  )
+
+  for (i in seq_len(retries)) {
+    res <- try(curl_fetch_memory(url, handle = h), silent = TRUE)
+    if (!inherits(res, "try-error") && res$status_code >= 200 && res$status_code < 300) {
+      txt <- rawToChar(res$content)
+      return(jsonlite::fromJSON(txt, simplifyVector = FALSE))
+    }
+    Sys.sleep(0.5 * i)
+  }
+
+  stop("Failed to fetch Zotero data from: ", url)
+}
+
+zotero_items_url <- function(
+  user_id = "6167652",
+  collection = "publications",
+  item_types = NULL,
+  tag = NULL,
+  style = "apa",
+  sort = "date",
+  include = "bib",
+  linkwrap = 1,
+  v = 3,
+  format = "json"
+) {
+  base <- sprintf("https://api.zotero.org/users/%s/%s/items", user_id, collection)
+
+  params <- list(
+    v = v,
+    format = format,
+    include = include,
+    linkwrap = linkwrap,
+    sort = sort,
+    style = style
+  )
+
+  # Zotero OR uses `||`; URLencode will take care of pipes/spaces
+  if (!is.null(item_types) && length(item_types) > 0) {
+    params$itemType <- paste(item_types, collapse = " || ")
+  }
+  if (!is.null(tag)) {
+    params$tag <- tag
+  }
+
+  qs <- paste(
+    vapply(names(params), function(k) {
+      paste0(k, "=", URLencode(as.character(params[[k]]), reserved = TRUE))
+    }, character(1)),
+    collapse = "&"
+  )
+
+  paste0(base, "?", qs)
+}
+
+# ---------- Flatten (your flattener; fixed + quiet) ----------
+tl <- function(e) {
+  if (is.null(e)) return(NULL)
+  ret <- typeof(e)
+  if (ret == "list" && !is.null(names(e))) ret <- list(type = "namedlist")
+  else ret <- list(type = ret, len = length(e))
+  ret
+}
+
+mkcsv <- function(v) paste0(v, collapse = ",")
+
+keyListToStr <- function(keyList) {
+  paste0("/", paste0(vapply(keyList, function(key) {
+    if (is.null(key)) "*" else paste0(key, collapse = ",")
+  }, character(1)), collapse = "/"))
+}
+
+extractLevelColumns <- function(
+  nodes,
+  ...,
+  keyList = list(),
+  sep = NULL,
+  mkname = function(keyList, maxLen)
+    paste0(if (is.null(sep) && maxLen == 1L) keyList[-length(keyList)] else keyList, collapse = ".")
+) {
+  if (length(nodes) == 0L) return(list())
+
+  tlList <- lapply(nodes, tl)
+  typeList <- do.call(c, lapply(tlList, `[[`, "type"))
+
+  if (length(unique(typeList)) != 1L) {
+    stop(sprintf("Inconsistent types (%s) at %s.", mkcsv(typeList), keyListToStr(keyList)))
+  }
+  type <- typeList[1L]
+
+  if (type == "namedlist") {
+    allKeys <- unique(do.call(c, lapply(nodes, names)))
+    ret <- do.call(c, lapply(allKeys, function(key) {
+      extractLevelColumns(
+        lapply(nodes, `[[`, key),
+        ...,
+        keyList = c(keyList, key),
+        sep = sep,
+        mkname = mkname
+      )
+    }))
+  } else if (type == "list") {
+    lenList <- do.call(c, lapply(tlList, `[[`, "len"))
+    maxLen <- max(lenList, na.rm = TRUE)
+    ret <- do.call(c, lapply(seq_len(maxLen), function(index) {
+      extractLevelColumns(
+        lapply(nodes, function(node) if (length(node) < index) NULL else node[[index]]),
+        ...,
+        keyList = c(keyList, index),
+        sep = sep,
+        mkname = mkname
+      )
+    }))
+  } else if (type %in% c("raw","logical","integer","double","complex","character")) {
+    lenList <- do.call(c, lapply(tlList, `[[`, "len"))
+    maxLen <- max(lenList, na.rm = TRUE)
+
+    if (is.null(sep)) {
+      ret <- lapply(seq_len(maxLen), function(i) {
+        setNames(
+          data.frame(sapply(nodes, function(node) if (length(node) < i) NA else node[[i]]), ...),
+          mkname(c(keyList, i), maxLen)
+        )
+      })
+    } else {
+      ret <- list(setNames(
+        data.frame(sapply(nodes, function(node) {
+          if (length(node) == 0L) NA
+          else if (maxLen == 1L) node
+          else paste(node, collapse = sep)
+        }), ...),
+        mkname(keyList, maxLen)
+      ))
+    }
+  } else {
+    stop(sprintf("Unsupported type %s at %s.", type, keyListToStr(keyList)))
+  }
+
+  if (is.null(ret)) ret <- list()
+  ret
+}
+
+flattenList <- function(mainList, ...) do.call(cbind, extractLevelColumns(mainList, ...))
+
+# ---------- Helpers ----------
+clean_bib <- function(x) {
+  x <- gsub("Pat-El, R.,", "Pat-El, R. J.,", x, fixed = TRUE)
+  x <- gsub("Pat El", "Pat-El", x, fixed = TRUE)
+  x <- gsub("Pat-El, R. J.", "<b>Pat-El, R. J.</b>", x, fixed = TRUE)
+  x
+}
+
+add_year <- function(df) {
+  df$year <- suppressWarnings(as.integer(str_sub(df$meta.parsedDate, 1, 4)))
+  df
+}
+
+# Zotero bib is already HTML -> print "asis" via cat()
+print_grouped_by_year <- function(df) {
+  df <- df %>% filter(!is.na(year)) %>% arrange(desc(year))
+  by_year <- split(df, df$year)
+
+  for (y in sort(as.integer(names(by_year)), decreasing = TRUE)) {
+    cat(sprintf("<h3>%s</h3>\n", y))
+    cat(by_year[[as.character(y)]]$bib, sep = "\n")
+    cat("\n")
+  }
+}
+
+# ---------- Fetch everything once ----------
+url_articles  <- zotero_items_url(item_types = c("journalArticle", "conferencePaper"))
+url_pres      <- zotero_items_url(item_types = c("Presentation"))
+url_books     <- zotero_items_url(item_types = c("book", "thesis", "bookSection", "webpage"))
+url_software  <- zotero_items_url(item_types = c("computerProgram")) # Zotero "Software"
+url_prof      <- zotero_items_url(item_types = c("magazineArticle"))
+
+df_articles <- flattenList(read_zotero(url_articles)) %>% add_year()
+df_pres     <- flattenList(read_zotero(url_pres))
+df_books    <- flattenList(read_zotero(url_books))
+df_software <- flattenList(read_zotero(url_software)) %>% add_year()
+df_prof     <- flattenList(read_zotero(url_prof))
+
+df_articles$bib <- clean_bib(df_articles$bib)
+df_pres$bib     <- clean_bib(df_pres$bib)
+df_books$bib    <- clean_bib(df_books$bib)
+df_software$bib <- clean_bib(df_software$bib)
+df_prof$bib     <- clean_bib(df_prof$bib)
 ```
 
 ```{=html}
@@ -26,191 +231,34 @@ knitr::opts_chunk$set(echo = FALSE)
 </style>
 ```
 
-```{r include=FALSE}
-library("rjson")
+## List of publications
 
-tl <- function(e) { if (is.null(e)) return(NULL); ret <- typeof(e); if (ret == 'list' && !is.null(names(e))) ret <- list(type='namedlist') else ret <- list(type=ret,len=length(e)); ret; };
-mkcsv <- function(v) paste0(collapse=',',v);
-keyListToStr <- function(keyList) paste0(collapse='','/',sapply(keyList,function(key) if (is.null(key)) '*' else paste0(collapse=',',key)));
+### Peer-reviewed Journal Articles `r knitr::asis_output(pill_html(nrow(df_articles)))`
 
-extractLevelColumns <- function(
-    nodes, ## current level node selection
-    ..., ## additional arguments to data.frame()
-    keyList=list(), ## current key path under main list
-    sep=NULL, ## optional string separator on which to join multi-element vectors; if NULL, will leave as separate columns
-    mkname=function(keyList,maxLen) paste0(collapse='.',if (is.null(sep) && maxLen == 1L) keyList[-length(keyList)] else keyList) ## name builder from current keyList and character vector max length across node level; default to dot-separated keys, and remove last index component for scalars
-) {
-    cat(sprintf('extractLevelColumns(): %s\n',keyListToStr(keyList)));
-    if (length(nodes) == 0L) return(list()); ## handle corner case of empty main list
-    tlList <- lapply(nodes,tl);
-    typeList <- do.call(c,lapply(tlList,`[[`,'type'));
-    if (length(unique(typeList)) != 1L) stop(sprintf('error: inconsistent types (%s) at %s.',mkcsv(typeList),keyListToStr(keyList)));
-    type <- typeList[1L];
-    if (type == 'namedlist') { ## hash; recurse
-        allKeys <- unique(do.call(c,lapply(nodes,names)));
-        ret <- do.call(c,lapply(allKeys,function(key) extractLevelColumns(lapply(nodes,`[[`,key),...,keyList=c(keyList,key),sep=sep,mkname=mkname)));
-    } else if (type == 'list') { ## array; recurse
-        lenList <- do.call(c,lapply(tlList,`[[`,'len'));
-        maxLen <- max(lenList,na.rm=T);
-        allIndexes <- seq_len(maxLen);
-        ret <- do.call(c,lapply(allIndexes,function(index) extractLevelColumns(lapply(nodes,function(node) if (length(node) < index) NULL else node[[index]]),...,keyList=c(keyList,index),sep=sep,mkname=mkname))); ## must be careful to translate out-of-bounds to NULL; happens automatically with string keys, but not with integer indexes
-    } else if (type%in%c('raw','logical','integer','double','complex','character')) { ## atomic leaf node; build column
-        lenList <- do.call(c,lapply(tlList,`[[`,'len'));
-        maxLen <- max(lenList,na.rm=T);
-        if (is.null(sep)) {
-            ret <- lapply(seq_len(maxLen),function(i) setNames(data.frame(sapply(nodes,function(node) if (length(node) < i) NA else node[[i]]),...),mkname(c(keyList,i),maxLen)));
-        } else {
-            ## keep original type if maxLen is 1, IOW don't stringify
-            ret <- list(setNames(data.frame(sapply(nodes,function(node) if (length(node) == 0L) NA else if (maxLen == 1L) node else paste(collapse=sep,node)),...),mkname(keyList,maxLen)));
-        }; ## end if
-    } else stop(sprintf('error: unsupported type %s at %s.',type,keyListToStr(keyList)));
-    if (is.null(ret)) ret <- list(); ## handle corner case of exclusively empty sublists
-    ret;
-}; ## end extractLevelColumns()
-## simple interface function
-flattenList <- function(mainList,...) do.call(cbind,extractLevelColumns(mainList,...));
-
-
-json_file <- "https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&itemType=journalArticle%20||%20conferencePaper&sort=date&style=apa"
-json_data <- fromJSON(file=json_file, simplify = TRUE)
-
-df <- flattenList(json_data)
+```{r echo=FALSE, message=FALSE, warning=FALSE, results='asis'}
+print_grouped_by_year(df_articles)
 ```
 
-## Peer-reviewed Journal Articles <button class='pill'>`r dim(df)[1]`</button>
+### Software `r knitr::asis_output(pill_html(nrow(df_software)))`
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-# remove month/day from publication year
-library(stringr)
-df$meta.parsedDate <- as.numeric(stringr::str_sub(df$meta.parsedDate, 1, 4))
-
-# make my name bold
-df$bib <- gsub("Pat-El, R.,", "Pat-El, R. J.,", df$bib)
-df$bib <- gsub("Pat-El, R. J.", "<b>Pat-El, R. J.</b>", df$bib)
-
+knitr::asis_output(df_software$bib)
 ```
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
-library(dplyr)
+### Books and chapters `r knitr::asis_output(pill_html(nrow(df_books)))`
 
-# create list per year
-dfsplit <- split(df, df$meta.parsedDate)
-
-# print journal-publications per year of publication
-journalpub <- function() {
-  for(j in length(dfsplit):1) {
-    writeLines(paste0("<h3 style='font-family: 'Bebas Neue', cursive;'>", unique(dfsplit[[j]]$meta.parsedDate), "</h3>"))
-    for(i in 1:dim(dfsplit[[j]][19])[1]) {
-      writeLines(paste0("<p>", dfsplit[[j]][i,19], "</p>"))
-    }
-  }
-}
-
-# output the per-year list as HTML
-shiny::HTML(journalpub())
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::asis_output(df_books$bib)
 ```
 
-```{r get_presentations, include=FALSE}
-# load presentation references
-json_pres <- 'https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&itemType=Presentation&sort=date&style=apa'
+### Presentations `r knitr::asis_output(pill_html(nrow(df_pres)))`
 
-# Try adding a small delay before fetching
-Sys.sleep(3) # Wait for 1 second
-json_presdata <- fromJSON(file=json_pres, simplify = TRUE)
-
-# create dataframe from JSON
-dfpres <- flattenList(json_presdata)
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::asis_output(df_pres$bib)
 ```
 
-## Presentations <button class='pill'>`r dim(dfpres)[1]`</button>
+### Professional `r knitr::asis_output(pill_html(nrow(df_prof)))`
 
-```{r presentations, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
-# fix variants of my name
-dfpres$bib <- gsub("Pat-El, R.,", "Pat-El, R. J.,", dfpres$bib)
-dfpres$bib <- gsub("Pat El", "Pat-El", dfpres$bib)
-
-# make my name bold
-dfpres$bib <- gsub("Pat-El, R. J.", "<b>Pat-El, R. J.</b>", dfpres$bib)
-
-# print my list of publications/presentations in html
-knitr::asis_output(dfpres$bib)
-```
-
-```{r get_books, include=FALSE}
-# load book references
-json_book <- 'https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&itemType=book%20||%20thesis%20||%20bookSection%20||%20webpage&sort=date&style=apa'
-
-# Try adding a small delay before fetching
-Sys.sleep(1) # Wait for 1 second
-json_bookdata <- fromJSON(file=json_book, simplify = TRUE)
-
-# create dataframe from JSON
-dfbook <- flattenList(json_bookdata)
-```
-
-## Books and chapters <button class='pill'>`r dim(dfbook)[1]`</button>
-
-```{r books, echo=FALSE, message=FALSE, warning=FALSE, results="asis"}
-# fix variants of my name
-dfbook$bib <- gsub("Pat-El, R.,", "Pat-El, R. J.,", dfbook$bib)
-dfbook$bib <- gsub("Pat El", "Pat-El", dfbook$bib)
-
-# make my name bold
-dfbook$bib <- gsub("Pat-El, R. J.", "<b>Pat-El, R. J.</b>", dfbook$bib)
-
-# print my list of publications/presentations in html
-knitr::asis_output(dfbook$bib)
-```
-
-```{r get_software, include=FALSE}
-# load software references by tag
-json_software <- 'https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&tag=software&sort=date&style=apa'
-
-# Try adding a small delay before fetching
-Sys.sleep(1) # Wait for 1 second
-json_softwaredata <- fromJSON(file=json_software, simplify = TRUE)
-
-# create dataframe from JSON
-dfsoftware <- flattenList(json_softwaredata)
-```
-
-## Software <button class='pill'>`r dim(dfsoftware)[1]`</button>
-
-```{r software, echo=FALSE, message=FALSE, warning=FALSE}
-# fix variants of my name
-dfsoftware$bib <- gsub("Pat-El, R.,", "Pat-El, R. J.,", dfsoftware$bib)
-dfsoftware$bib <- gsub("Pat El", "Pat-El", dfsoftware$bib)
-
-# make my name bold
-dfsoftware$bib <- gsub("Pat-El, R. J.", "<b>Pat-El, R. J.</b>", dfsoftware$bib)
-
-# print my list of software in html
-knitr::asis_output(dfsoftware$bib)
-```
-
-```{r get_professional, include=FALSE}
-# load mag references
-json_mag <- 'https://api.zotero.org/users/6167652/publications/items?v=3&format=json&include=bib&linkwrap=1&itemType=magazineArticle&sort=date&style=apa'
-
-# Try adding a small delay before fetching
-Sys.sleep(6) # Wait for 1 second
-json_magdata <- fromJSON(file=json_mag, simplify = TRUE)
-
-# create dataframe from JSON
-dfmag <- flattenList(json_magdata)
-
-```
-
-## Professional <button class='pill'>`r dim(dfmag)[1]`</button>
-
-```{r professional, echo=FALSE, message=FALSE, warning=FALSE}
-# fix variants of my name
-dfmag$bib <- gsub("Pat-El, R.,", "Pat-El, R. J.,", dfmag$bib)
-dfmag$bib <- gsub("Pat El", "Pat-El", dfmag$bib)
-
-# make my name bold
-dfmag$bib <- gsub("Pat-El, R. J.", "<b>Pat-El, R. J.</b>", dfmag$bib)
-
-# print my list of publications/presentations in html
-knitr::asis_output(dfmag$bib)
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+knitr::asis_output(df_prof$bib)
 ```
