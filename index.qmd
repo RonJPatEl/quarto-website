@@ -37,8 +37,13 @@ My research focuses on psychometrics, agent-based models and student motivation 
 </style>
 ```
 
-```{r echo=FALSE}
-hindex <- scholar::get_profile('sAAmFv8AAAAJ&hl')$h_index
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+profile <- scholar::get_profile('sAAmFv8AAAAJ')
+hindex <- if (is.list(profile)) profile$h_index else NA_real_
+if (length(hindex) != 1L || !is.numeric(hindex) || is.na(hindex) ||
+    !is.finite(hindex) || hindex < 0) {
+  stop('Could not retrieve the current Google Scholar h-index. Please try rendering again.')
+}
 ```
 
 

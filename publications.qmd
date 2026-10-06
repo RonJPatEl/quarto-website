@@ -1,7 +1,9 @@
 ---
 title: "Publications"
 toc: true
-freeze: auto
+execute:
+  freeze: false
+  cache: false
 ---
 
 ```{r setup, include=FALSE}
@@ -26,16 +28,31 @@ read_zotero <- function(url, retries = 3) {
     timeout = 30L
   )
 
-  for (i in seq_len(retries)) {
-    res <- try(curl_fetch_memory(url, handle = h), silent = TRUE)
-    if (!inherits(res, "try-error") && res$status_code >= 200 && res$status_code < 300) {
-      txt <- rawToChar(res$content)
-      return(jsonlite::fromJSON(txt, simplifyVector = FALSE))
-    }
-    Sys.sleep(0.5 * i)
-  }
+  # Zotero returns only 25 items by default. Fetch every page so older
+  # publications remain visible as the record grows.
+  items <- list()
+  start <- 0L
+  page_size <- 100L
+  separator <- if (grepl("?", url, fixed = TRUE)) "&" else "?"
 
-  stop("Failed to fetch Zotero data from: ", url)
+  repeat {
+    page_url <- paste0(url, separator, "limit=", page_size, "&start=", start)
+    page <- NULL
+
+    for (i in seq_len(retries)) {
+      res <- try(curl_fetch_memory(page_url, handle = h), silent = TRUE)
+      if (!inherits(res, "try-error") && res$status_code >= 200 && res$status_code < 300) {
+        page <- jsonlite::fromJSON(rawToChar(res$content), simplifyVector = FALSE)
+        break
+      }
+      Sys.sleep(0.5 * i)
+    }
+
+    if (is.null(page)) stop("Failed to fetch Zotero data from: ", page_url)
+    items <- c(items, page)
+    if (length(page) < page_size) return(items)
+    start <- start + length(page)
+  }
 }
 
 zotero_items_url <- function(
